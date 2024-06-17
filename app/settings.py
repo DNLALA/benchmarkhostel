@@ -19,6 +19,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'ecs-load-balancer-1338984265.eu-north-1.elb.amazonaws.com',
+    'benchmarkhostel.com.ng',
 ]
 
 
