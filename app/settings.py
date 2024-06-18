@@ -20,6 +20,16 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'ecs-load-balancer-1338984265.eu-north-1.elb.amazonaws.com',
     'benchmarkhostel.com.ng',
+    '127.0.0.1',
+]
+
+
+CORS_ALLOWED_ORIGINS = [
+    'https://benchmarkhostel.com.ng',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://benchmarkhostel.com.ng',
 ]
 
 
@@ -113,7 +123,6 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'myapp.authentication.CustomAuthentication',
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
