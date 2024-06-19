@@ -1,6 +1,6 @@
 from django.urls import path
-from users.api import views
+from hostel.api import views
 
 urlpatterns = [
-    
+    path('hostel-create/', views.HostelCreateUpdateView.as_view(), name='hostel-create'),
 ]
