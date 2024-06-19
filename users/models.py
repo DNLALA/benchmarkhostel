@@ -37,6 +37,7 @@ class User(AbstractUser):
         primary_key=True, unique=True, default=uuid.uuid4, editable=False
     )
     username = models.CharField(max_length=255, unique=True)
+    gender = models.CharField(max_length=50, null=True, blank=True)
     reg_no = models.CharField(max_length=255, unique=True)
     email = models.EmailField(unique=True)
     is_student = models.BooleanField(default=False)

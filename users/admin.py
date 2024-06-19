@@ -5,11 +5,11 @@ from .models import User
 
 class UserAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
-    list_display = ('email', 'reg_no', 'is_student', 'is_warden', 'is_staff', 'is_active', 'has_hostel')
-    list_filter = ('is_student', 'is_warden', 'is_staff', 'is_active', 'has_hostel')
+    list_display = ('email', 'reg_no', 'is_student', 'is_warden', 'is_staff', 'is_active', 'has_hostel', 'gender')
+    list_filter = ('is_student', 'is_warden', 'is_staff', 'is_active', 'has_hostel', 'gender')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (_('Personal info'), {'fields': ('reg_no',)}),
+        (_('Personal info'), {'fields': ('reg_no', 'gender',)}),
         (_('Permissions'), {'fields': ('is_staff', 'is_active', 'is_student', 'is_warden', 'has_hostel')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )

@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id', 'username', 'reg_no', 'email', 'is_student', 'is_warden',
-            'is_active', 'created_at', 'last_login', 'tokens', 'has_hostel'
+            'is_active', 'created_at', 'last_login', 'tokens', 'has_hostel', 'gender'
         ]
         read_only_fields = ['id', 'created_at', 'last_login', 'tokens']
 
@@ -32,7 +32,7 @@ class StudentRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'username', 'reg_no', 'password', 'password2']
+        fields = ['email', 'username', 'reg_no', 'password', 'password2', 'gender']
     
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
@@ -80,7 +80,7 @@ class WardenRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'username', 'reg_no', 'password', 'password2']
+        fields = ['email', 'username', 'reg_no', 'password', 'password2', 'gender']
     
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
