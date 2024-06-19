@@ -6,7 +6,7 @@ from .serializers import HostelSerializer
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 
-class HostelCreateUpdateView(APIView):
+class HostelCreateView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = HostelSerializer
 
@@ -19,5 +19,7 @@ class HostelCreateUpdateView(APIView):
                 user=user,
                 defaults=serializer.validated_data
             )
+            user.has_hostel = True
+            user.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
