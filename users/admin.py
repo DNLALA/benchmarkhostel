@@ -5,8 +5,8 @@ from .models import User
 
 class UserAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
-    list_display = ('email', 'reg_no', 'is_student', 'is_warden', 'is_staff', 'is_active')
-    list_filter = ('is_student', 'is_warden', 'is_staff', 'is_active')
+    list_display = ('email', 'reg_no', 'is_student', 'is_warden', 'is_staff', 'is_active', 'has_hostel')
+    list_filter = ('is_student', 'is_warden', 'is_staff', 'is_active', 'has_hostel')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (_('Personal info'), {'fields': ('reg_no',)}),
