@@ -73,3 +73,51 @@ class StudentLoginSerializer(serializers.Serializer):
         user = validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
         return {'token': token.key}
+    
+class WardenRegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True)
+    password2 = serializers.CharField(write_only=True, required=True)
+
+    class Meta:
+        model = User
+        fields = ['email', 'username', 'reg_no', 'password', 'password2']
+    
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({"password": "Password fields didn't match."})
+        return attrs
+
+    def create(self, validated_data):
+        validated_data.pop('password2')
+        validated_data['is_warden'] = True
+        user = User.objects.create_user(**validated_data)
+        token, created = Token.objects.get_or_create(user=user)
+        return {'token': token.key}
+    
+class WardenLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+    token = serializers.CharField(read_only=True)
+
+    def validate(self, data):
+        email = data.get('email')
+        password = data.get('password')
+
+        if email and password:
+            user = authenticate(request=self.context.get('request'), email=email, password=password)
+
+            if not user:
+                raise serializers.ValidationError("Invalid login credentials")
+            if not user.is_warden:
+                raise serializers.ValidationError("Only wardens can log in here")
+
+        else:
+            raise serializers.ValidationError("Must include both email and password")
+
+        data['user'] = user
+        return data
+
+    def create(self, validated_data):
+        user = validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return {'token': token.key}
