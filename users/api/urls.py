@@ -4,4 +4,5 @@ from users.api import views
 urlpatterns = [
     path('student-register/', views.StudentRegistrationView.as_view(), name='student-register'),
     path('student-login/', views.StudentLoginView.as_view(), name='student-login'),
+    path('user-details/', views.UserDetailView.as_view(), name='user-details'),
 ]

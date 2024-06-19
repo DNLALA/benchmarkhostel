@@ -8,4 +8,5 @@ urlpatterns = [
     path('', SpectacularSwaggerView.as_view(url_name='schema')),
     path('admin/', admin.site.urls),
     path('auth/', include('users.api.urls')),
+    path('hostel/', include('hostel.api.urls')),
 ]

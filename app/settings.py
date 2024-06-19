@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     # apps
     'users',
+    'hostel',
 
     # 3rd parthy
     'rest_framework.authtoken',
