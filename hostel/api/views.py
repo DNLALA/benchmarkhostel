@@ -63,3 +63,25 @@ class HostelDetailByUserView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Hostel.DoesNotExist:
             return Response({"error": "Hostel not found for the given user ID"}, status=status.HTTP_404_NOT_FOUND)
+        
+class ChangeHostelUserView(APIView):
+    def put(self, request, hostel_id):
+        try:
+            hostel = Hostel.objects.get(id=hostel_id)
+        except Hostel.DoesNotExist:
+            return Response({"error": "Hostel not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        user_id = request.data.get('user_id')
+        if not user_id:
+            return Response({"error": "User ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        hostel.user = user
+        hostel.save()
+
+        serializer = HostelSerializer(hostel)
+        return Response(serializer.data, status=status.HTTP_200_OK)
