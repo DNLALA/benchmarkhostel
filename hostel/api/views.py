@@ -55,10 +55,11 @@ class HostelListView(APIView):
     
 class HostelDetailByUserView(APIView):
     serializer_class = HostelSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, user_id):
+    def get(self, request):
         try:
-            hostel = Hostel.objects.get(user__id=user_id)
+            hostel = Hostel.objects.get(user=request.user)
             serializer = HostelSerializer(hostel)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Hostel.DoesNotExist:
