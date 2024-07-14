@@ -52,3 +52,14 @@ class HostelListView(APIView):
         hostels = Hostel.objects.all()
         serializer = self.serializer_class(hostels, many=True)
         return Response(serializer.data)
+    
+class HostelDetailByUserView(APIView):
+    serializer_class = HostelSerializer
+
+    def get(self, request, user_id):
+        try:
+            hostel = Hostel.objects.get(user__id=user_id)
+            serializer = HostelSerializer(hostel)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Hostel.DoesNotExist:
+            return Response({"error": "Hostel not found for the given user ID"}, status=status.HTTP_404_NOT_FOUND)
