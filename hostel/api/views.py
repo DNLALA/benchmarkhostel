@@ -2,12 +2,24 @@ from django.http import Http404
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from hostel.models import Hostel
-from .serializers import HostelSerializer, HostelDetailSerializer
+from hostel.models import Hostel, Request
+from .serializers import HostelSerializer, HostelDetailSerializer, RequestSerializer
 from users.models import User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status, permissions
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+
+
+class RequestDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = RequestSerializer
+
+    def get(self, request, hostel_id, format=None):
+        hostel = get_object_or_404(Hostel, id=hostel_id)
+        request_obj = get_object_or_404(Request, user=hostel)
+        serializer = RequestSerializer(request_obj)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class HostelCreateView(APIView):
     permission_classes = [IsAuthenticated]
