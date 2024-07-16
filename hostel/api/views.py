@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from hostel.models import Hostel
 from .serializers import HostelSerializer, HostelDetailSerializer
-from django.contrib.auth.models import User
+from users.models import User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status, permissions
 from rest_framework.response import Response
@@ -14,19 +14,24 @@ class HostelCreateView(APIView):
     serializer_class = HostelSerializer
 
     def post(self, request):
-        user = request.user
         serializer = self.serializer_class(data=request.data)
-        
         if serializer.is_valid():
-            hostel, created = Hostel.objects.update_or_create(
-                user=user,
-                defaults=serializer.validated_data
-            )
-            user.has_hostel = True
-            user.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            user = serializer.validated_data.get('user', None)
+            room_number = serializer.validated_data.get('room_number')
+            defaults = {k: v for k, v in serializer.validated_data.items() if k != 'room_number'}
+            
+            if user:
+                hostel, created = Hostel.objects.update_or_create(
+                    user=user,
+                    room_number=room_number,
+                    defaults=defaults
+                )
+            else:
+                hostel = Hostel.objects.create(**serializer.validated_data)
+                created = True
 
+            return Response(serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserHostelDetailView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -49,7 +54,7 @@ class HostelListView(APIView):
     serializer_class = HostelDetailSerializer
 
     def get(self, request, format=None):
-        hostels = Hostel.objects.all()
+        hostels = Hostel.objects.all().order_by('created_at') 
         serializer = self.serializer_class(hostels, many=True)
         return Response(serializer.data)
     
@@ -86,3 +91,16 @@ class ChangeHostelUserView(APIView):
 
         serializer = HostelSerializer(hostel)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class UserWithoutHostelView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        # Query users without a hostel
+        users_without_hostel = User.objects.exclude(hostel__isnull=False)
+
+        # Serialize users if needed
+        # Example of simple serialization (optional)
+        user_list = list(users_without_hostel.values('id', 'username', 'email'))
+
+        return Response(user_list, status=status.HTTP_200_OK)

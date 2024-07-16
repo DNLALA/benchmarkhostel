@@ -7,4 +7,5 @@ urlpatterns = [
     path('hostel-create/', views.HostelCreateView.as_view(), name='hostel-create'),
     path('user-hostel-detail/', views.UserHostelDetailView.as_view(), name='user-hostel-detail'),
     path('hostel-list/', views.HostelListView.as_view(), name='hostel-list'),
+    path('users/without-hostel/', views.UserWithoutHostelView.as_view(), name='users-without-hostel'),
 ]
